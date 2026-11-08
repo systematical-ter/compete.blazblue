@@ -2,6 +2,8 @@ import datetime
 import html
 import re
 
+import dateutil
+
 import cloudlib
 from flask import Flask, render_template
 
@@ -62,12 +64,13 @@ def strip_info_from_description(event_desc):
     #       as a bulleted list.
     #   Is what it is; this is fine for a first solution.
 
-    twitch_link = r"(?P<url>twitch\.tv\/[a-zA-Z_0-9]+)($|&amp;sa=.+)"
-    discord_link = r"(?P<url>discord.gg\/[a-zA-Z_0-9]+)($|&amp;sa=.+)"
-    twitter_link = r"(?P<url>x.com\/[a-zA-Z_0-9]+)($|&amp;sa=.+)"
-    matcherino_link = r"(?P<url>matcherino.com\/t\/[a-zA-Z_0-9]+)($|&amp;sa=.+)"
-    bracket_link = r"(?P<url>start.gg\/[a-zA-Z0-9]+)($|&amp;sa=.+)"
+    twitch_link = r"(?P<url>twitch\.tv\/[a-zA-Z_0-9]+)($|&amp;sa=.+|\")"
+    discord_link = r"(?P<url>discord\.gg\/[a-zA-Z_0-9]+)($|&amp;sa=.+|\")"
+    twitter_link = r"(?P<url>x\.com\/[a-zA-Z_0-9]+)($|&amp;sa=.+|\")"
+    matcherino_link = r"(?P<url>matcherino\.com\/t\/[a-zA-Z_0-9]+)($|&amp;sa=.+|\")"
+    bracket_link = r"(?P<url>start\.gg\/[a-zA-Z0-9]+)($|&amp;sa=.+|\")"
 
+    print(event_desc)
     # google LOVES putting their own bullshit in front of some links!!!
     image_link = r"(&quot;|\")<a href=\"(https://www.google.com/url\?q=)*(?P<url>.+?)(\"|&amp;)"
 
@@ -95,7 +98,7 @@ def strip_info_from_description(event_desc):
     if ma is not None:
         res['links']['matcherino'] = ma.groupdict()['url']
     if br is not None:
-        res['links']['bracket'] = br.groupdict()['url']
+        res['links']['start'] = br.groupdict()['url']
     if details is not None:
         res['details'] = details['items']
     if image is not None:
@@ -111,7 +114,7 @@ def test():
 @app.route('/')
 def home():
 
-    today_events = []
+    thisweek_events = []
     this_sunday = get_sunday(datetime.datetime.now(tz=datetime.UTC))
     min_date = this_sunday + datetime.timedelta()
     max_date = this_sunday + datetime.timedelta(days=20)
@@ -133,6 +136,11 @@ def home():
         # nuke all HTML symbols in the event name so if someone tries to do injection stuff it just word vomits
         event['summary'] = html.escape(event['summary'], quote=False)
 
-        today_events.append(event)
+        # ISO calendar starts on Monday
+        event_week = dateutil.parser.isoparse(event['start']['dateTime']).isocalendar().week
+        this_week = (this_sunday + datetime.timedelta(days=1)).isocalendar().week
 
-    return render_template('calendar.html', events=ev, today_events=today_events, min_date=min_date, max_date=max_date)
+        if event_week == this_week :
+            thisweek_events.append(event)
+
+    return render_template('calendar.html', events=ev, thisweek_events=thisweek_events, min_date=min_date, max_date=max_date)

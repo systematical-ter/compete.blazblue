@@ -50,21 +50,27 @@
 {% endblock %}
 
 {%block calendar %}
+<div>
+  Upcoming Events
+</div>
 <div id="calendar_week" class="ec-dark"></div>
 {%endblock%}
 
 {%block info %}
-Today's Events:
+<div>
+This week's events:
+</div>
 <div class="flex flex-wrap gap-4 justify-center">
     {% autoescape off %}
-    {% for event in today_events %}
+    {% for event in thisweek_events %}
     <div class="w-sm bg-middle p-2 rounded-md
-                border border-accent">
+                border border-accent shadow-xl/40
+                flex flex-col gap-2">
         <div class="w-fill h-40 overflow-clip flex justify-center items-center border border-accent rounded-md">
           <img src="{{ event.image }}" referrerpolicy="no-referrer"  >
         </div>
 
-        <b>{{ event.summary }}</b></br>
+        <b>{{ event.summary }}</b>
         {% if event.details|length > 0 %}
           <ul class="list-disc list-inside">
           {% for item in event.details %}
@@ -72,12 +78,18 @@ Today's Events:
           {% endfor %}
           </ul>
         {% endif %}
+        <div class="flex flex-row gap-4">
         {% for type, link in event.links.items() %}
-            {{ link }} </br>
+            <div class="w-5 h-5 flex items-center">
+              <a href="http://{{link}}">
+              <img src="{{ url_for('static', filename='images/')}}{{ type }}.png"/>
+              </a>
+            </div>
         {% endfor %}
+        </div>
     </div>
     {% else %}
-        No events today!
+        No events this week!
     {% endfor %}
     {% endautoescape %}
 </div>
