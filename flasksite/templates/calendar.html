@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@event-calendar/build@5.18.1/dist/event-calendar.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@event-calendar/build@5.18.1/dist/event-calendar.min.js"></script>
+    <script>
+      var calendar;
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const calendarEl = document.getElementById("calendar_week");
+        calendar = EventCalendar.create(calendarEl, {
+          view: "dayGridWeek",
+            headerToolbar: {
+                start: 'prev,next',
+            },
+          height: 300,
+          validRange: {
+            start: "{{min_date.isoformat()}}",
+            end: "{{max_date.isoformat()}}"
+          },
+          editable: false,
+          eventStartEditable: false,
+          dateClick: function (info) {console.log("wow")},
+          events: [
+          {% for event in events %}
+            { 
+                title: "{{event.summary|safe}}", 
+                start: "{{event.start.dateTime}}", 
+                end: "{{event.end.dateTime}}"
+            },
+          {% endfor %}
+          ]
+        });
+      });
+    </script>
+    <style>
+      .ec-event-body {
+        flex-direction: column !important;
+        padding: 2px;
+      }
+
+      .ec-event-title {
+        white-space: wrap !important
+      }
+
+      .ec-day-head {
+        padding: 2px;
+      }
+
+      #calendar_week {
+        width: 75%;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+        <div id="calendar_week"></div>
+        <div>
+            Today's Events:
+            {% autoescape off %}
+            {% for event in today_events %}
+            <div>
+                <b>{{ event.summary }}</b></br>
+                {{event.details}}
+                {% for type, link in event.links.items() %}
+                    {{ link }} </br>
+                {% endfor %}
+            </div>
+            {% else %}
+                No events today!
+            {% endfor %}
+            {% endautoescape %}
+        </div>
+    </div>
+  </body>
+</html>
