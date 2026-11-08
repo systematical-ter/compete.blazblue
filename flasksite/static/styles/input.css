@@ -27,3 +27,33 @@ we still enforce color-scheme: dark, despite the user preference */
   --color-dark: oklch(14.8% 0.004 228.8);
   --color-accent: oklch(27.5% 0.011 216.9)
 }
+
+@font-face {
+  font-family: "NAL Hand";
+  src: url(../fonts/NALHand.otf);
+}
+
+@font-face {
+  font-family: "blazblue";
+  src: url("../fonts/blazblue.otf");
+}
+
+.headerdiv {
+  font-family: "blazblue";
+  font-size: x-large;
+}
+
+.subheaderdiv {
+  font-family: "NAL Hand";
+  font-size: x-large;
+}
+
+a {
+  color: #5db663;
+
+}
+
+a:hover {
+    color: #78d17d;
+
+}

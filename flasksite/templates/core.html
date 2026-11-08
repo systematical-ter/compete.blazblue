@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="{{ url_for('static',filename='styles/output.css') }}" rel="stylesheet">
+  <title>The Wheel of Fate: BBCF Event Calendar</title>
+  <meta name="description" content="A listing of upcoming events for the game Blazblue Centralfiction, developed by Arc System Works.">
   {% block head %}{% endblock head %}
 </head>
 <body class="flex flex-col items-center bg-dark">
@@ -19,6 +21,18 @@
     <div>
       Yay :)
     </div>
+      <div class="inline-block w-0.5 self-stretch bg-neutral-100 dark:bg-white/10"></div>
+    <div>
+      <a href="/#UpcomingEvents">Upcoming Events</a>
+    </div>
+      <div class="inline-block w-0.5 self-stretch bg-neutral-100 dark:bg-white/10"></div>
+    <div>
+      <a href="/#ThisWeek">This Week</a>
+    </div>
+      <div class="inline-block w-0.5 self-stretch bg-neutral-100 dark:bg-white/10"></div>
+    <div>
+      <a href="/#About">About</a>
+    </div>
   </div>
   <div id="div-calendar" class="max-w-4xl p-4 bg-middle rounded-md flex flex-col gap-4 items-center">
     {% block calendar %}{% endblock %}
@@ -26,6 +40,39 @@
   <div id="div-content" class="max-w-4xl p-4 bg-middle rounded-md flex flex-col gap-4 items-center">
     {% block info %}{% endblock %}
   </div>
+  <div id="About" class="max-w-4xl p-4 bg-middle rounded-md flex flex-col items-center gap-1">
+    
+    <div class="headerdiv">
+      About
+    </div>
+    <div class="subheaderdiv">
+      The Wheel of Fate
+    </div>
+    <div class="pl-5 pr-5 w-full">
+      This site is a web representation of the Wheel of Fate BBCF Event Calendar, maintained by Eterna. The events shown here are submitted by TOs and validated by Eterna before upload. Please join the Wheel of Fate server <a href="https://discord.gg/Bhd5dpqvM2">here</a> if you'd like to submit events, or sign up to have the bot announce events to your discord server! Note that the server requires a <b>manual verification process</b> so it may take a bit to join.
+    </div>
+    <div class="subheaderdiv">
+      BBCF Resources
+    </div>
+    <div class="pl-5 pr-5 w-full">
+      Here are some other links for BBCF resources:
+      <ul class="list-disc list-inside">
+        <li><a href="https://azuregrimoire.uwu.ai">Azure Grimoire: A BBCF Community Compendium</a></li>
+      </ul>
+    </div>
+    <div class="subheaderdiv">
+      Credits/This Site
+    </div>
+    <div class="pl-5 pr-5 w-full">
+      Site made by Systematical: <a href="https://bsky.app/profile/systematical.bsky.social">Bluesky</a><br/>
+      Github repository + source available here: <a href="https://github.com/systematical-ter/compete.blazblue">GitHub</a> (still private while testing the site)<br/>
+      <!-- Banner by Chickzama: <a href="https://x.com/Chickzama">Twitter</a><br/> -->
+      Event data by Eterna: <a href="https://x.com/FadedBlackCrown">Twitter</a><br/>
+    </div>
+  </div>
+  <div class="h-5">
+  </div>
 </div>
+
 </body>
 </html>

@@ -31,6 +31,14 @@
       {% endfor %}
       ]
     });
+
+    let buttons = document.querySelector(".ec-button-group");
+    let prev_button = document.querySelector("button.ec-prev");
+    let next_button = document.querySelector("button.ec-next");
+    let calendar_div = document.querySelector("#calendar_week");
+
+    calendar_div.before(prev_button)
+    calendar_div.after(next_button)
   });
 </script>
 <style>
@@ -46,19 +54,36 @@
   .ec-day-head {
     padding: 2px;
   }
+  .ec-button:not(:disabled) {
+    background-color: var(--color-mist-800);
+  }
+  .ec-button:hover:not(:disabled){
+    background-color: var(--color-mist-700);
+  }
+
+  .ec-button:disabled {
+    color: var(--color-accent);
+    background-color: var(--color-dark);
+  }
+
+  .ec-toolbar {
+    display: none;
+  }
 </style>
 {% endblock %}
 
 {%block calendar %}
-<div>
+<div id="UpcomingEvents" class="headerdiv">
   Upcoming Events
 </div>
-<div id="calendar_week" class="ec-dark"></div>
+<div class="flex flex-row gap-2">
+  <div id="calendar_week" class="ec-dark"></div>
+</div>
 {%endblock%}
 
 {%block info %}
-<div>
-This week's events:
+<div id="ThisWeek" class="headerdiv">
+This week's events
 </div>
 <div class="flex flex-wrap gap-4 justify-center">
     {% autoescape off %}

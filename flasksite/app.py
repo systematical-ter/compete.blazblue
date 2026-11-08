@@ -1,3 +1,4 @@
+import configparser
 import datetime
 import html
 import re
@@ -5,7 +6,6 @@ import re
 import cloudlib
 import dateutil
 from flask import Flask, render_template
-import configparser
 
 app = Flask(__name__)
 
