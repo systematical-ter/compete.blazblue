@@ -2,9 +2,8 @@ import datetime
 import html
 import re
 
-import dateutil
-
 import cloudlib
+import dateutil
 from flask import Flask, render_template
 
 app = Flask(__name__)
@@ -70,7 +69,6 @@ def strip_info_from_description(event_desc):
     matcherino_link = r"(?P<url>matcherino\.com\/t\/[a-zA-Z_0-9]+)($|&amp;sa=.+|\")"
     bracket_link = r"(?P<url>start\.gg\/[a-zA-Z0-9]+)($|&amp;sa=.+|\")"
 
-    print(event_desc)
     # google LOVES putting their own bullshit in front of some links!!!
     image_link = r"(&quot;|\")<a href=\"(https://www.google.com/url\?q=)*(?P<url>.+?)(\"|&amp;)"
 
