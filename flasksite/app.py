@@ -5,7 +5,6 @@ import re
 import cloudlib
 import dateutil
 from flask import Flask, render_template
-
 app = Flask(__name__)
 
 # Source - https://stackoverflow.com/a/2003896
