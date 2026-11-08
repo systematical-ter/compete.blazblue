@@ -108,11 +108,6 @@ def strip_info_from_description(event_desc):
 
     return res
 
-@app.route('/test')
-def test():
-    # endpoint to test random bullshit
-    return render_template('core.html')
-
 @app.route('/')
 def home():
 
