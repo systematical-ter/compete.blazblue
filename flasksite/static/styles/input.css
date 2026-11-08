@@ -25,7 +25,7 @@ we still enforce color-scheme: dark, despite the user preference */
 @theme {
   --color-middle: oklch(21.8% 0.008 223.9);
   --color-dark: oklch(14.8% 0.004 228.8);
-  --color-accent: oklch(27.5% 0.011 216.9)
+  --color-accent: oklch(27.5% 0.011 216.9);
 }
 
 @font-face {
@@ -41,6 +41,7 @@ we still enforce color-scheme: dark, despite the user preference */
 .headerdiv {
   font-family: "blazblue";
   font-size: x-large;
+  color: #E1F1B7;
 }
 
 .subheaderdiv {
@@ -49,11 +50,27 @@ we still enforce color-scheme: dark, despite the user preference */
 }
 
 a {
-  color: #5db663;
+  color: #839650;
 
 }
 
 a:hover {
-    color: #78d17d;
+    color: #E1F1B7;
 
+}
+
+#div-header {
+  background-image: url(../images/header_shorter.png);
+}
+
+.headerlink {
+  font-weight: bolder;
+  -webkit-text-stroke: 3px black;
+   paint-order: stroke fill;
+}
+
+@layer base {
+  .font-outline {
+    -webkit-text-stroke: 1px black;
+  }
 }

@@ -185,6 +185,9 @@
   .inline-block {
     display: inline-block;
   }
+  .aspect-900\/250 {
+    aspect-ratio: 900/250;
+  }
   .h-5 {
     height: calc(var(--spacing) * 5);
   }
@@ -230,8 +233,14 @@
   .items-center {
     align-items: center;
   }
+  .items-end {
+    align-items: flex-end;
+  }
   .justify-center {
     justify-content: center;
+  }
+  .justify-end {
+    justify-content: flex-end;
   }
   .gap-1 {
     gap: var(--spacing);
@@ -270,6 +279,15 @@
   }
   .bg-neutral-100 {
     background-color: var(--color-neutral-100);
+  }
+  .bg-cover {
+    background-size: cover;
+  }
+  .bg-center {
+    background-position: center;
+  }
+  .bg-no-repeat {
+    background-repeat: no-repeat;
   }
   .p-2 {
     padding: calc(var(--spacing) * 2);
@@ -323,16 +341,30 @@
 .headerdiv {
   font-family: "blazblue";
   font-size: x-large;
+  color: #E1F1B7;
 }
 .subheaderdiv {
   font-family: "NAL Hand";
   font-size: x-large;
 }
 a {
-  color: #5db663;
+  color: #839650;
 }
 a:hover {
-  color: #78d17d;
+  color: #E1F1B7;
+}
+#div-header {
+  background-image: url(../images/header_shorter.png);
+}
+.headerlink {
+  font-weight: bolder;
+  -webkit-text-stroke: 3px black;
+  paint-order: stroke fill;
+}
+@layer base {
+  .font-outline {
+    -webkit-text-stroke: 1px black;
+  }
 }
 @property --tw-border-style {
   syntax: "*";

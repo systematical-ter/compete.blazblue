@@ -9,29 +9,26 @@
   {% block head %}{% endblock head %}
 </head>
 <body class="flex flex-col items-center bg-dark">
-<div id="div-body" class="flex flex-col max-w-5xl items-center min-h-screen gap-4">
+<div id="div-body" class="flex flex-col max-w-5xl items-center min-h-screen gap-4 ">
   <div id="div-header" class="w-full p-4
-                             bg-middle 
                              border border-accent 
                              rounded-b-md
-                             flex flex-row items-center gap-2">
+                             flex flex-row items-end justify-end gap-2
+                             bg-cover
+                             bg-center bg-no-repeat
+                             aspect-900/250
+                             ">
+    
     <div>
-      LOGO
-    </div>
-    <div>
-      Yay :)
-    </div>
-      <div class="inline-block w-0.5 self-stretch bg-neutral-100 dark:bg-white/10"></div>
-    <div>
-      <a href="/#UpcomingEvents">Upcoming Events</a>
+      <a href="/#UpcomingEvents" class="headerlink">Upcoming Events</a>
     </div>
       <div class="inline-block w-0.5 self-stretch bg-neutral-100 dark:bg-white/10"></div>
     <div>
-      <a href="/#ThisWeek">This Week</a>
+      <a href="/#ThisWeek" class="headerlink">This Week</a>
     </div>
       <div class="inline-block w-0.5 self-stretch bg-neutral-100 dark:bg-white/10"></div>
     <div>
-      <a href="/#About">About</a>
+      <a href="/#About" class="headerlink">About</a>
     </div>
   </div>
   <div id="div-calendar" class="max-w-4xl p-4 bg-middle rounded-md flex flex-col gap-4 items-center">
@@ -66,7 +63,7 @@
     <div class="pl-5 pr-5 w-full">
       Site made by Systematical: <a href="https://bsky.app/profile/systematical.bsky.social">Bluesky</a><br/>
       Github repository + source available here: <a href="https://github.com/systematical-ter/compete.blazblue">GitHub</a> (still private while testing the site)<br/>
-      <!-- Banner by Chickzama: <a href="https://x.com/Chickzama">Twitter</a><br/> -->
+      Banner by Chickzama: <a href="https://x.com/Chickzama">Twitter</a><br/>
       Event data by Eterna: <a href="https://x.com/FadedBlackCrown">Twitter</a><br/>
     </div>
   </div>

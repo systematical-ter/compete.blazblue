@@ -32,10 +32,9 @@
       ]
     });
 
-    let buttons = document.querySelector(".ec-button-group");
-    let prev_button = document.querySelector("button.ec-prev");
-    let next_button = document.querySelector("button.ec-next");
-    let calendar_div = document.querySelector("#calendar_week");
+    const prev_button = document.querySelector("button.ec-prev");
+    const next_button = document.querySelector("button.ec-next");
+    const calendar_div = document.querySelector("#calendar_week");
 
     calendar_div.before(prev_button)
     calendar_div.after(next_button)
