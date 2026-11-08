@@ -5,7 +5,12 @@ import re
 import cloudlib
 import dateutil
 from flask import Flask, render_template
+import configparser
+
 app = Flask(__name__)
+
+config = configparser.ConfigParser()
+config.read("config.env")
 
 # Source - https://stackoverflow.com/a/2003896
 # Posted by Roger Pate
@@ -141,3 +146,7 @@ def home():
             thisweek_events.append(event)
 
     return render_template('calendar.html', events=ev, thisweek_events=thisweek_events, min_date=min_date, max_date=max_date)
+
+@app.route("/" + config["DEFAULT"]["google_verification"])
+def google_site_verf():
+    return render_template(config["DEFAULT"]["google_verification"])
