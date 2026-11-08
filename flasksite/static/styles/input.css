@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+/*
+Source - https://stackoverflow.com/a/74370265
+Posted by nonbeing
+Retrieved 2026-11-08, License - CC BY-SA 4.0
+*/
+
+/* If the user prefers dark mode, 
+we of course apply color-scheme: dark, as usual */
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+}
+
+/* If the user prefers light mode, 
+we still enforce color-scheme: dark, despite the user preference */
+@media (prefers-color-scheme: light) {
+  html {
+    color-scheme: dark;
+  }
+}
+
+@theme {
+  --color-middle: oklch(21.8% 0.008 223.9);
+  --color-dark: oklch(14.8% 0.004 228.8);
+  --color-accent: oklch(27.5% 0.011 216.9)
+}

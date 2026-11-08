@@ -1,77 +1,84 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@event-calendar/build@5.18.1/dist/event-calendar.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@event-calendar/build@5.18.1/dist/event-calendar.min.js"></script>
-    <script>
-      var calendar;
+{% extends "core.html" %}
 
-      document.addEventListener("DOMContentLoaded", function () {
-        const calendarEl = document.getElementById("calendar_week");
-        calendar = EventCalendar.create(calendarEl, {
-          view: "dayGridWeek",
-            headerToolbar: {
-                start: 'prev,next',
-            },
-          height: 300,
-          validRange: {
-            start: "{{min_date.isoformat()}}",
-            end: "{{max_date.isoformat()}}"
-          },
-          editable: false,
-          eventStartEditable: false,
-          dateClick: function (info) {console.log("wow")},
-          events: [
-          {% for event in events %}
-            { 
-                title: "{{event.summary|safe}}", 
-                start: "{{event.start.dateTime}}", 
-                end: "{{event.end.dateTime}}"
-            },
-          {% endfor %}
-          ]
-        });
-      });
-    </script>
-    <style>
-      .ec-event-body {
-        flex-direction: column !important;
-        padding: 2px;
-      }
+{% block head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@event-calendar/build@5.18.1/dist/event-calendar.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@event-calendar/build@5.18.1/dist/event-calendar.min.js"></script>
+<script>
+  var calendar;
 
-      .ec-event-title {
-        white-space: wrap !important
-      }
+  document.addEventListener("DOMContentLoaded", function () {
+    const calendarEl = document.getElementById("calendar_week");
+    calendar = EventCalendar.create(calendarEl, {
+      view: "dayGridWeek",
+        headerToolbar: {
+            center: 'prev,next',
+        },
+      height: 300,
+      validRange: {
+        start: "{{min_date.isoformat()}}",
+        end: "{{max_date.isoformat()}}"
+      },
+      editable: false,
+      eventStartEditable: false,
+      dateClick: function (info) {console.log("wow")},
+      events: [
+      {% for event in events %}
+        { 
+            title: "{{event.summary|safe}}", 
+            start: "{{event.start.dateTime}}", 
+            end: "{{event.end.dateTime}}"
+        },
+      {% endfor %}
+      ]
+    });
+  });
+</script>
+<style>
+  .ec-event-body {
+    flex-direction: column !important;
+    padding: 2px;
+  }
 
-      .ec-day-head {
-        padding: 2px;
-      }
+  .ec-event-title {
+    white-space: wrap !important
+  }
 
-      #calendar_week {
-        width: 75%;
-      }
-    </style>
-  </head>
-  <body>
-    <div>
-        <div id="calendar_week"></div>
-        <div>
-            Today's Events:
-            {% autoescape off %}
-            {% for event in today_events %}
-            <div>
-                <b>{{ event.summary }}</b></br>
-                {{event.details}}
-                {% for type, link in event.links.items() %}
-                    {{ link }} </br>
-                {% endfor %}
-            </div>
-            {% else %}
-                No events today!
-            {% endfor %}
-            {% endautoescape %}
+  .ec-day-head {
+    padding: 2px;
+  }
+</style>
+{% endblock %}
+
+{%block calendar %}
+<div id="calendar_week" class="ec-dark"></div>
+{%endblock%}
+
+{%block info %}
+Today's Events:
+<div class="flex flex-wrap gap-4 justify-center">
+    {% autoescape off %}
+    {% for event in today_events %}
+    <div class="w-sm bg-middle p-2 rounded-md
+                border border-accent">
+        <div class="w-fill h-40 overflow-clip flex justify-center items-center border border-accent rounded-md">
+          <img src="{{ event.image }}" referrerpolicy="no-referrer"  >
         </div>
+
+        <b>{{ event.summary }}</b></br>
+        {% if event.details|length > 0 %}
+          <ul class="list-disc list-inside">
+          {% for item in event.details %}
+            <li> {{item}} </li>
+          {% endfor %}
+          </ul>
+        {% endif %}
+        {% for type, link in event.links.items() %}
+            {{ link }} </br>
+        {% endfor %}
     </div>
-  </body>
-</html>
+    {% else %}
+        No events today!
+    {% endfor %}
+    {% endautoescape %}
+</div>
+{%endblock%}

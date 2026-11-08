@@ -14,3 +14,9 @@ wheels/
 *token.json
 
 */config.env
+
+# npm
+node_modules/
+
+# preferences
+.vscode

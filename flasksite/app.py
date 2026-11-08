@@ -20,6 +20,29 @@ def get_sunday(date):
   sunday = date - datetime.timedelta(days=day_idx)
   return sunday
 
+def strip_list_items(event_desc) -> dict:
+    # strip out exactly the items in the first unordered list found
+    # then use html.escape to ensure nothing weird is in them
+
+    list_reg = r"<ul>.+?<\/ul>"
+    list_item_reg = r"<li>(?P<content>.+?)<\/li>"
+
+    res = {"items":[]}
+
+    list_res = re.search(list_reg, event_desc)
+    if list_res is None:
+        return res
+
+    item_res = re.findall(list_item_reg, list_res.group())
+    if item_res is None:
+        return res
+
+    for item in item_res:
+        res['items'].append(html.escape(item, quote=False))
+
+    return res
+
+
 def strip_info_from_description(event_desc):
     # Strip out particular information of interest from the event description
     # Why?
@@ -45,7 +68,8 @@ def strip_info_from_description(event_desc):
     matcherino_link = r"(?P<url>matcherino.com\/t\/[a-zA-Z_0-9]+)($|&amp;sa=.+)"
     bracket_link = r"(?P<url>start.gg\/[a-zA-Z0-9]+)($|&amp;sa=.+)"
 
-    bracket_details = r"(?P<details>Bracket Details:<ul>.+<\/ul>)<br>"
+    # google LOVES putting their own bullshit in front of some links!!!
+    image_link = r"(&quot;|\")<a href=\"(https://www.google.com/url\?q=)*(?P<url>.+?)(\"|&amp;)"
 
     twch = re.search(twitch_link, event_desc)
     di = re.search(discord_link, event_desc)
@@ -53,12 +77,11 @@ def strip_info_from_description(event_desc):
     ma = re.search(matcherino_link, event_desc)
     br = re.search(bracket_link, event_desc)
 
-    details = re.search(bracket_details, event_desc)
-    # TODO: do additional stuff to forcibly pull out only the list items
-    #   because right now someone can still inject whatever they want potentially
+    details = strip_list_items(event_desc)
 
     # TODO: also copy out the tags, can use that to filter on the site later
 
+    image = re.search(image_link, event_desc)
     # TODO: Maybe also copy out the images lmao
 
     res = {'details': '', 'links': {}}
@@ -74,9 +97,16 @@ def strip_info_from_description(event_desc):
     if br is not None:
         res['links']['bracket'] = br.groupdict()['url']
     if details is not None:
-        res['details'] = details.groupdict()['details']
+        res['details'] = details['items']
+    if image is not None:
+        res['image'] = html.escape(image.groupdict()['url'])
 
     return res
+
+@app.route('/test')
+def test():
+    # endpoint to test random bullshit
+    return render_template('core.html')
 
 @app.route('/')
 def home():
@@ -95,6 +125,7 @@ def home():
         dat = strip_info_from_description(event['description'])
         event['links'] = dat['links']
         event['details'] = dat['details']
+        event['image'] = dat['image']
         
         # remove some substrings.
         event['summary'] = event['summary'].replace("Series Event - ","").replace("Event Series: ","")
