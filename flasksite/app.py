@@ -126,8 +126,8 @@ def home():
     for event in ev:
         # fetch stripped out URLs and details
         dat = strip_info_from_description(event['description'])
-        event['links'] = dat['links']
-        event['details'] = dat['details']
+        event['links'] = dat.get('links', [])
+        event['details'] = dat.get('details', [])
         event['image'] = dat.get('image',url_for('static', filename='images/missing_image.png'))
         
         # remove some substrings.
