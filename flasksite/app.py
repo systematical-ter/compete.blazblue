@@ -128,7 +128,7 @@ def home():
         dat = strip_info_from_description(event['description'])
         event['links'] = dat['links']
         event['details'] = dat['details']
-        event['image'] = dat['image']
+        event['image'] = dat.get('image',"")
         
         # remove some substrings.
         event['summary'] = event['summary'].replace("Series Event - ","").replace("Event Series: ","")
