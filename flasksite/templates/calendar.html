@@ -107,7 +107,7 @@ This week's events
         {% for type, link in event.links.items() %}
             <div class="w-5 h-5 flex items-center">
               <a href="http://{{link}}">
-              <img src="{{ url_for('static', filename='images/')}}{{ type }}.png"/>
+              <img src="{{ url_for('static', filename='images/')}}{{ type }}.png" title="{{type}}: {{link}}"/>
               </a>
             </div>
         {% endfor %}
