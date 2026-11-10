@@ -12,9 +12,8 @@ creds = service_account.Credentials.from_service_account_file(
 )
 config = configparser.ConfigParser()
 config.read("config.env")
-calendar_id = config['DEFAULT']['calendar_id']
 
-def get_events(minDate, maxDate):
+def get_events(minDate, maxDate, calendar_id) -> dict:
     try:
         service = build("calendar", "v3", credentials=creds)
 
@@ -36,10 +35,11 @@ def get_events(minDate, maxDate):
 
         if not events:
             print("No upcoming events found.")
-            return
+            return {}
 
         # Prints the start and name of the next 10 events
         return events
 
     except HttpError as error:
         print(f"An error occurred: {error}")
+        return {}

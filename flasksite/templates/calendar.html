@@ -22,12 +22,15 @@
       eventStartEditable: false,
       dateClick: function (info) {console.log("wow")},
       events: [
-      {% for event in events %}
+      {% for calendar,list in events.items() %}
+        {% for event in list %}
         { 
             title: "{{event.summary|safe}}", 
             start: "{{event.start.dateTime}}", 
-            end: "{{event.end.dateTime}}"
+            end: "{{event.end.dateTime}}",
+            backgroundColor: "{{colors[calendar]}}"
         },
+        {% endfor %}
       {% endfor %}
       ]
     });
@@ -75,47 +78,97 @@
 <div id="UpcomingEvents" class="headerdiv">
   Upcoming Events
 </div>
+<div class="flex flex-row items-center gap-2">
+  {% for name, color in colors.items() %}
+  <div class="flex items-center flex-row">
+  <div class="rounded-sm w-5 h-5 m-2" style="background-color: {{color}}"></div>
+  {{name}}
+  </div>
+  {% endfor %}
+</div>
 <div class="flex flex-row gap-2">
   <div id="calendar_week" class="ec-dark"></div>
 </div>
 {%endblock%}
 
 {%block info %}
+<!-- TODO: will definitely look really strange with no events in either
+ section. Need to make it much prettier. 
+ Frankly, that'll probably involve using javascript, and I *REALLY*
+ don't want to, so I will continue to procrastinate for a bit.-->
 <div id="ThisWeek" class="headerdiv">
 This week's events
 </div>
+<div class="subheaderdiv">
+Upcoming
+</div>
 <div class="flex flex-wrap gap-4 justify-center">
-    {% autoescape off %}
     {% for event in thisweek_events %}
-    <div class="w-sm bg-middle p-2 rounded-md
-                border border-accent shadow-xl/40
-                flex flex-col gap-2">
-        <div class="w-fill h-40 overflow-clip flex justify-center items-center border border-accent rounded-md">
-          <img src="{{ event.image }}" referrerpolicy="no-referrer"  >
-        </div>
-        <div class="flex-1">
-        <b>{{ event.summary }}</b>
-        {% if event.details|length > 0 %}
-          <ul class="list-disc list-inside">
-          {% for item in event.details %}
-            <li> {{item}} </li>
+      {% if event.start.dateObj > now %}
+      <div class="w-sm bg-middle p-2 rounded-md
+                  border border-accent shadow-xl/40
+                  flex flex-col gap-2">
+          <div class="w-fill h-40 overflow-clip flex justify-center items-center border border-accent rounded-md">
+            <img src="{{ event.image }}" referrerpolicy="no-referrer"  >
+          </div>
+          <div class="flex-1">
+          <b>{{ event.summary }}</b>
+          {% if event.details|length > 0 %}
+            <ul class="list-disc list-inside">
+            {% for item in event.details %}
+              <li> {{item}} </li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+          </div>
+          <div class="flex flex-row gap-4">
+          {% for type, link in event.links.items() %}
+              <div class="w-5 h-5 flex items-center">
+                <a href="http://{{link}}">
+                <img src="{{ url_for('static', filename='images/')}}{{ type }}.png" title="{{type}}: {{link}}"/>
+                </a>
+              </div>
           {% endfor %}
-          </ul>
-        {% endif %}
-        </div>
-        <div class="flex flex-row gap-4">
-        {% for type, link in event.links.items() %}
-            <div class="w-5 h-5 flex items-center">
-              <a href="http://{{link}}">
-              <img src="{{ url_for('static', filename='images/')}}{{ type }}.png" title="{{type}}: {{link}}"/>
-              </a>
-            </div>
-        {% endfor %}
-        </div>
-    </div>
+          </div>
+      </div>
+      {%endif%}
     {% else %}
         No events this week!
     {% endfor %}
-    {% endautoescape %}
+</div>
+<div class="subheaderdiv">
+Completed
+</div>
+<div class="flex flex-wrap gap-4 justify-center">
+    {% for event in thisweek_events %}
+      {% if event.start.dateObj < now %}
+      <div class="w-sm bg-middle p-2 rounded-md
+                  border border-accent shadow-xl/40
+                  flex flex-col gap-2">
+          <div class="w-fill h-40 overflow-clip flex justify-center items-center border border-accent rounded-md">
+            <img src="{{ event.image }}" referrerpolicy="no-referrer"  >
+          </div>
+          <div class="flex-1">
+          <b>{{ event.summary }}</b>
+          {% if event.details|length > 0 %}
+            <ul class="list-disc list-inside">
+            {% for item in event.details %}
+              <li> {{item}} </li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+          </div>
+          <div class="flex flex-row gap-4">
+          {% for type, link in event.links.items() %}
+              <div class="w-5 h-5 flex items-center">
+                <a href="http://{{link}}">
+                <img src="{{ url_for('static', filename='images/')}}{{ type }}.png" title="{{type}}: {{link}}"/>
+                </a>
+              </div>
+          {% endfor %}
+          </div>
+      </div>
+      {%endif%}
+    {% endfor %}
 </div>
 {%endblock%}

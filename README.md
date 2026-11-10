@@ -28,9 +28,11 @@ The `service-credentials.json` that is referenced by `cloudlib.py` stores the cr
 
 There's a few more details that I've kept private in a `config.env` file for security reasons. Use `EXAMPLE_ENV` as an idea for structure.
 
-`calendar_id` represents the url of the calendar you're operationg on. it should be of the format: `[a-z0-9]+@group.calendar.google.com`.
+The `[GOOGLE]` section stores google verification information. If you try to verify your website for google search indexing using a specific method, it'll ask you to upload a file. Drop the file into `flasksite/static/templates` and put the name of the file here if you do that. If you don't, just set it to NONE and don't visit `(site address)/NONE`, because it'll return (probably) a 500 error.
 
-`google_verification` is the file that google will provide you if you try to verify your website for google search indexing. If this doesn't matter to you, don't worry about it. For now, just put some nonsense and the site shouldn't crash. I'll make this behave more nicely on empty value later.
+The `CALENDARS` section stores the url of calendars you're operating on. You get this by having the calendar on your calendar list, going to "settings", and under "Integration Settings" there should be a "calendar id".
+
+The `COLORS` section stores colors for the calendars you're operating on. Just put a hex code for each calendar. Make sure that the keys match. The site WILL crash if this isn't done properly atm.
 
 # Development
 

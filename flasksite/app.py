@@ -3,14 +3,17 @@ import datetime
 import html
 import re
 
-import cloudlib
+import calendarpi
 import dateutil
 from flask import Flask, render_template, url_for
 
 app = Flask(__name__)
 
 config = configparser.ConfigParser()
+config.optionxform = str # type: ignore
 config.read("config.env")
+calendars = config['CALENDARS']
+colors = config['COLORS']
 
 # Source - https://stackoverflow.com/a/2003896
 # Posted by Roger Pate
@@ -24,6 +27,20 @@ def get_sunday(date):
   day_idx = (date.weekday() + 1) % 7  # turn sunday into 0, monday into 1, etc.
   sunday = date - datetime.timedelta(days=day_idx)
   return sunday
+
+def clean_item(item: str) -> str :
+    # remove spans
+    item = item.replace("<span>","")\
+                .replace("</span>","")
+
+    # remove brs
+    item = item.replace("<br>","") \
+                .replace("<br/>","")
+
+    # strip whitespaces
+    item = item.strip()
+
+    return item
 
 def strip_list_items(event_desc) -> dict:
     # strip out exactly the items in the first unordered list found
@@ -43,10 +60,9 @@ def strip_list_items(event_desc) -> dict:
         return res
 
     for item in item_res:
-        res['items'].append(html.escape(item.replace("<span>","").replace("</span>",""), quote=False))
+        res['items'].append(html.escape(clean_item(item), quote=False))
 
     return res
-
 
 def strip_info_from_description(event_desc):
     # Strip out particular information of interest from the event description
@@ -119,32 +135,38 @@ def home():
     min_date = this_sunday + datetime.timedelta()
     max_date = this_sunday + datetime.timedelta(days=20)
 
-    ev = cloudlib.get_events(min_date, max_date)
-    if ev is None:
+    print(list(colors.keys()))
+    ev = {}
+    for calendar, url in calendars.items():
+        if calendar is not None:
+            ev[calendar] = calendarpi.get_events(min_date, max_date, url)
+    if len(ev.keys()) == 0:
         return render_template('error.html', message="No events returned...")
-    
-    for event in ev:
-        # fetch stripped out URLs and details
-        dat = strip_info_from_description(event['description'])
-        event['links'] = dat.get('links', [])
-        event['details'] = dat.get('details', [])
-        event['image'] = dat.get('image',url_for('static', filename='images/missing_image.png'))
-        
-        # remove some substrings.
-        event['summary'] = event['summary'].replace("Series Event - ","").replace("Event Series: ","")
 
-        # nuke all HTML symbols in the event name so if someone tries to do injection stuff it just word vomits
-        event['summary'] = html.escape(event['summary'], quote=False)
+    for key in ev:  # noqa: PLC0206
+        for event in ev[key]:
+            # fetch stripped out URLs and details
+            dat = strip_info_from_description(event['description'])
+            event['start']['dateObj'] = dateutil.parser.isoparse(event['start']['dateTime'])
+            event['links'] = dat.get('links', [])
+            event['details'] = dat.get('details', [])
+            event['image'] = dat.get('image',url_for('static', filename='images/missing_image.png'))
+            
+            # remove some substrings.
+            event['summary'] = event['summary'].replace("Series Event - ","").replace("Event Series: ","")
 
-        # ISO calendar starts on Monday
-        event_week = dateutil.parser.isoparse(event['start']['dateTime']).isocalendar().week
-        this_week = (this_sunday + datetime.timedelta(days=1)).isocalendar().week
+            # nuke all HTML symbols in the event name so if someone tries to do injection stuff it just word vomits
+            event['summary'] = html.escape(event['summary'], quote=False)
 
-        if event_week == this_week :
-            thisweek_events.append(event)
+            # ISO calendar starts on Monday
+            event_week = dateutil.parser.isoparse(event['start']['dateTime']).isocalendar().week
+            this_week = (this_sunday + datetime.timedelta(days=1)).isocalendar().week
 
-    return render_template('calendar.html', events=ev, thisweek_events=thisweek_events, min_date=min_date, max_date=max_date)
+            if event_week == this_week :
+                thisweek_events.append(event)
 
-@app.route("/" + config["DEFAULT"]["google_verification"])
+    return render_template('calendar.html', now=datetime.datetime.now(datetime.UTC), events=ev, colors=colors, thisweek_events=thisweek_events, min_date=min_date, max_date=max_date)
+
+@app.route("/" + config["GOOGLE"]["google_verification"])
 def google_site_verf():
-    return render_template(config["DEFAULT"]["google_verification"])
+    return render_template(config["GOOGLE"]["google_verification"])
