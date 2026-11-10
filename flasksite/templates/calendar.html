@@ -93,7 +93,7 @@ This week's events
         <div class="w-fill h-40 overflow-clip flex justify-center items-center border border-accent rounded-md">
           <img src="{{ event.image }}" referrerpolicy="no-referrer"  >
         </div>
-
+        <div class="flex-1">
         <b>{{ event.summary }}</b>
         {% if event.details|length > 0 %}
           <ul class="list-disc list-inside">
@@ -102,6 +102,7 @@ This week's events
           {% endfor %}
           </ul>
         {% endif %}
+        </div>
         <div class="flex flex-row gap-4">
         {% for type, link in event.links.items() %}
             <div class="w-5 h-5 flex items-center">
