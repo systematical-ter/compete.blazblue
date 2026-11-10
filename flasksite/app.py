@@ -5,7 +5,7 @@ import re
 
 import cloudlib
 import dateutil
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for
 
 app = Flask(__name__)
 
@@ -43,7 +43,7 @@ def strip_list_items(event_desc) -> dict:
         return res
 
     for item in item_res:
-        res['items'].append(html.escape(item, quote=False))
+        res['items'].append(html.escape(item.replace("<span>","").replace("</span>",""), quote=False))
 
     return res
 
@@ -128,7 +128,7 @@ def home():
         dat = strip_info_from_description(event['description'])
         event['links'] = dat['links']
         event['details'] = dat['details']
-        event['image'] = dat.get('image',"")
+        event['image'] = dat.get('image',url_for('static', filename='images/missing_image.png'))
         
         # remove some substrings.
         event['summary'] = event['summary'].replace("Series Event - ","").replace("Event Series: ","")
