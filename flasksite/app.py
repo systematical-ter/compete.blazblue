@@ -143,8 +143,11 @@ def home():
     if len(ev.keys()) == 0:
         return render_template('error.html', message="No events returned...")
 
+    i = 0
     for key in ev:  # noqa: PLC0206
         for event in ev[key]:
+            event['id'] = i
+            i +=1
             # fetch stripped out URLs and details
             dat = strip_info_from_description(event['description'])
             event['start']['dateObj'] = dateutil.parser.isoparse(event['start']['dateTime'])
@@ -157,13 +160,9 @@ def home():
 
             # nuke all HTML symbols in the event name so if someone tries to do injection stuff it just word vomits
             event['summary'] = html.escape(event['summary'], quote=False)
+            thisweek_events.append(event)
 
-            # ISO calendar starts on Monday
-            event_week = dateutil.parser.isoparse(event['start']['dateTime']).isocalendar().week
-            this_week = (this_sunday + datetime.timedelta(days=1)).isocalendar().week
-
-            if event_week == this_week :
-                thisweek_events.append(event)
+    thisweek_events.sort(key=lambda event: event['start']['dateTime'])
 
     return render_template('calendar.html', now=datetime.datetime.now(datetime.UTC), events=ev, colors=colors, thisweek_events=thisweek_events, min_date=min_date, max_date=max_date)
 

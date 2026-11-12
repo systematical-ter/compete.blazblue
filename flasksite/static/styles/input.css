@@ -26,6 +26,17 @@ we still enforce color-scheme: dark, despite the user preference */
   --color-middle: oklch(21.8% 0.008 223.9);
   --color-dark: oklch(14.8% 0.004 228.8);
   --color-accent: oklch(27.5% 0.011 216.9);
+
+  --animate-borderflash: borderflash 1s ease-in-out 2;
+  @keyframes borderflash {
+    50% {
+      border-color: #E1F1B7;
+    }
+    0%,
+    100% {
+      border-color: var(--color-accent);
+    }
+  }
 }
 
 @font-face {

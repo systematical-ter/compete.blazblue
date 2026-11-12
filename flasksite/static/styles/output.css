@@ -14,15 +14,18 @@
     --color-white: #fff;
     --spacing: 0.25rem;
     --container-sm: 24rem;
+    --container-3xl: 48rem;
     --container-4xl: 56rem;
     --container-5xl: 64rem;
     --radius-sm: 0.25rem;
     --radius-md: 0.375rem;
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
     --default-font-family: var(--font-sans);
     --default-mono-font-family: var(--font-mono);
     --color-middle: oklch(21.8% 0.008 223.9);
     --color-dark: oklch(14.8% 0.004 228.8);
     --color-accent: oklch(27.5% 0.011 216.9);
+    --animate-borderflash: borderflash 1s ease-in-out 2;
   }
 }
 @layer base {
@@ -174,6 +177,9 @@
   }
 }
 @layer utilities {
+  .fixed {
+    position: fixed;
+  }
   .static {
     position: static;
   }
@@ -188,6 +194,9 @@
   }
   .flex {
     display: flex;
+  }
+  .hidden {
+    display: none;
   }
   .inline-block {
     display: inline-block;
@@ -213,14 +222,26 @@
   .w-0\.5 {
     width: calc(var(--spacing) * 0.5);
   }
+  .w-3xl {
+    width: var(--container-3xl);
+  }
+  .w-4xl {
+    width: var(--container-4xl);
+  }
   .w-5 {
     width: calc(var(--spacing) * 5);
+  }
+  .w-5xl {
+    width: var(--container-5xl);
   }
   .w-full {
     width: 100%;
   }
   .w-sm {
     width: var(--container-sm);
+  }
+  .max-w-3xl {
+    max-width: var(--container-3xl);
   }
   .max-w-4xl {
     max-width: var(--container-4xl);
@@ -231,8 +252,17 @@
   .flex-1 {
     flex: 1;
   }
+  .flex-shrink {
+    flex-shrink: 1;
+  }
+  .shrink {
+    flex-shrink: 1;
+  }
   .border-collapse {
     border-collapse: collapse;
+  }
+  .animate-borderflash {
+    animation: var(--animate-borderflash);
   }
   .resize {
     resize: both;
@@ -252,6 +282,9 @@
   .flex-wrap {
     flex-wrap: wrap;
   }
+  .content-center {
+    align-content: center;
+  }
   .items-center {
     align-items: center;
   }
@@ -263,6 +296,9 @@
   }
   .justify-end {
     justify-content: flex-end;
+  }
+  .justify-items-center {
+    justify-items: center;
   }
   .gap-1 {
     gap: var(--spacing);
@@ -278,6 +314,9 @@
   }
   .overflow-clip {
     overflow: clip;
+  }
+  .overflow-x-scroll {
+    overflow-x: scroll;
   }
   .rounded-md {
     border-radius: var(--radius-md);
@@ -320,8 +359,14 @@
   .p-4 {
     padding: calc(var(--spacing) * 4);
   }
+  .pr-4 {
+    padding-right: calc(var(--spacing) * 4);
+  }
   .pr-5 {
     padding-right: calc(var(--spacing) * 5);
+  }
+  .pl-4 {
+    padding-left: calc(var(--spacing) * 4);
   }
   .pl-5 {
     padding-left: calc(var(--spacing) * 5);
@@ -329,8 +374,9 @@
   .text-center {
     text-align: center;
   }
-  .align-middle {
-    vertical-align: middle;
+  .ordinal {
+    --tw-ordinal: ordinal;
+    font-variant-numeric: var(--tw-ordinal, ) var(--tw-slashed-zero, ) var(--tw-numeric-figure, ) var(--tw-numeric-spacing, ) var(--tw-numeric-fraction, );
   }
   .underline {
     text-decoration-line: underline;
@@ -350,6 +396,10 @@
   }
   .filter {
     filter: var(--tw-blur, ) var(--tw-brightness, ) var(--tw-contrast, ) var(--tw-grayscale, ) var(--tw-hue-rotate, ) var(--tw-invert, ) var(--tw-saturate, ) var(--tw-sepia, ) var(--tw-drop-shadow, );
+  }
+  .ease-in-out {
+    --tw-ease: var(--ease-in-out);
+    transition-timing-function: var(--ease-in-out);
   }
   @media (prefers-color-scheme: dark) {
     .dark\:bg-white\/10 {
@@ -412,6 +462,26 @@ a:hover {
   syntax: "*";
   inherits: false;
   initial-value: solid;
+}
+@property --tw-ordinal {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-slashed-zero {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-numeric-figure {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-numeric-spacing {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-numeric-fraction {
+  syntax: "*";
+  inherits: false;
 }
 @property --tw-shadow {
   syntax: "*";
@@ -536,10 +606,27 @@ a:hover {
   syntax: "*";
   inherits: false;
 }
+@property --tw-ease {
+  syntax: "*";
+  inherits: false;
+}
+@keyframes borderflash {
+  50% {
+    border-color: #E1F1B7;
+  }
+  0%, 100% {
+    border-color: var(--color-accent);
+  }
+}
 @layer properties {
   @supports ((-webkit-hyphens: none) and (not (margin-trim: block))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {
     *, ::before, ::after, ::backdrop {
       --tw-border-style: solid;
+      --tw-ordinal: initial;
+      --tw-slashed-zero: initial;
+      --tw-numeric-figure: initial;
+      --tw-numeric-spacing: initial;
+      --tw-numeric-fraction: initial;
       --tw-shadow: 0 0 #0000;
       --tw-shadow-color: initial;
       --tw-shadow-alpha: 100%;
@@ -568,6 +655,7 @@ a:hover {
       --tw-drop-shadow-color: initial;
       --tw-drop-shadow-alpha: 100%;
       --tw-drop-shadow-size: initial;
+      --tw-ease: initial;
     }
   }
 }

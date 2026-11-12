@@ -3,10 +3,12 @@
 {% block head %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@event-calendar/build@5.18.1/dist/event-calendar.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@event-calendar/build@5.18.1/dist/event-calendar.min.js"></script>
+<script src="{{ url_for('static',filename='scripts/luxon.min.js')}}"></script>
+<script src="{{ url_for('static', filename='scripts/calendar.js')}}"></script>
 <script>
   var calendar;
 
-  document.addEventListener("DOMContentLoaded", function () {
+  function load_calendar() {
     const calendarEl = document.getElementById("calendar_week");
     calendar = EventCalendar.create(calendarEl, {
       view: "dayGridWeek",
@@ -19,8 +21,10 @@
         end: "{{max_date.isoformat()}}"
       },
       editable: false,
+      datesSet: function (info) {update_event_data(info)},
       eventStartEditable: false,
-      dateClick: function (info) {console.log("wow")},
+      eventDurationEditable: false,
+      eventClick: function (info) {event_click_event(info)},
       events: [
       {% for calendar,list in events.items() %}
         {% for event in list %}
@@ -28,7 +32,10 @@
             title: "{{event.summary|safe}}", 
             start: "{{event.start.dateTime}}", 
             end: "{{event.end.dateTime}}",
-            backgroundColor: "{{colors[calendar]}}"
+            backgroundColor: "{{colors[calendar]}}",
+            extendedProps: {
+              'eventId': "event-{{event.id}}"
+            }
         },
         {% endfor %}
       {% endfor %}
@@ -41,6 +48,16 @@
 
     calendar_div.before(prev_button)
     calendar_div.after(next_button)
+  };
+
+  document.addEventListener("DOMContentLoaded", function () {
+    upcoming_div = document.getElementById("upcomingevents")
+    past_div = document.getElementById("pastevents")
+    hidden_div = document.getElementById("allevents")
+    events_title_date = document.getElementById("eventstitledate")
+
+    load_calendar();
+    update_event_data();
   });
 </script>
 <style>
@@ -76,7 +93,7 @@
 
 {%block calendar %}
 <div id="UpcomingEvents" class="headerdiv">
-  Upcoming Events
+  Calendar
 </div>
 <div class="flex flex-row items-center gap-2">
   {% for name, color in colors.items() %}
@@ -96,18 +113,20 @@
  section. Need to make it much prettier. 
  Frankly, that'll probably involve using javascript, and I *REALLY*
  don't want to, so I will continue to procrastinate for a bit.-->
-<div id="ThisWeek" class="headerdiv">
-This week's events
+<div id="ThisWeek" class="headerdiv text-center">
+Events - <span id="eventstitledate"></span>
 </div>
 <div class="subheaderdiv">
 Upcoming
 </div>
-<div class="flex flex-wrap gap-4 justify-center">
+<div id="allevents" class="hidden">
     {% for event in thisweek_events %}
-      {% if event.start.dateObj > now %}
       <div class="w-sm bg-middle p-2 rounded-md
                   border border-accent shadow-xl/40
-                  flex flex-col gap-2">
+                  flex flex-col gap-2 eventcard"
+            data-date="{{event.start.dateTime}}"
+            data-state="hidden"
+            id="event-{{event.id}}">
           <div class="w-fill h-40 overflow-clip flex justify-center items-center border border-accent rounded-md">
             <img src="{{ event.image }}" referrerpolicy="no-referrer"  >
           </div>
@@ -131,44 +150,19 @@ Upcoming
           {% endfor %}
           </div>
       </div>
-      {%endif%}
-    {% else %}
-        No events this week!
     {% endfor %}
+</div>
+<div id="upcomingevents" class="flex flex-wrap gap-4 justify-center">
+  <div class="theresnothing hidden">
+    No more events this week!
+  </div>
 </div>
 <div class="subheaderdiv">
 Completed
 </div>
-<div class="flex flex-wrap gap-4 justify-center">
-    {% for event in thisweek_events %}
-      {% if event.start.dateObj < now %}
-      <div class="w-sm bg-middle p-2 rounded-md
-                  border border-accent shadow-xl/40
-                  flex flex-col gap-2">
-          <div class="w-fill h-40 overflow-clip flex justify-center items-center border border-accent rounded-md">
-            <img src="{{ event.image }}" referrerpolicy="no-referrer"  >
-          </div>
-          <div class="flex-1">
-          <b>{{ event.summary }}</b>
-          {% if event.details|length > 0 %}
-            <ul class="list-disc list-inside">
-            {% for item in event.details %}
-              <li> {{item}} </li>
-            {% endfor %}
-            </ul>
-          {% endif %}
-          </div>
-          <div class="flex flex-row gap-4">
-          {% for type, link in event.links.items() %}
-              <div class="w-5 h-5 flex items-center">
-                <a href="http://{{link}}">
-                <img src="{{ url_for('static', filename='images/')}}{{ type }}.png" title="{{type}}: {{link}}"/>
-                </a>
-              </div>
-          {% endfor %}
-          </div>
-      </div>
-      {%endif%}
-    {% endfor %}
+<div id="pastevents" class="flex flex-wrap gap-4 justify-center">
+  <div class="theresnothing hidden">
+    No events have happened yet!
+  </div>
 </div>
 {%endblock%}

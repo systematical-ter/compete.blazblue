@@ -10,7 +10,7 @@
   {% block head %}{% endblock head %}
 </head>
 <body class="flex flex-col items-center bg-dark">
-<div id="div-body" class="flex flex-col max-w-5xl items-center min-h-screen gap-4 ">
+<div id="div-body" class="flex flex-col pl-4 pr-4 max-w-5xl items-center min-h-screen gap-4 ">
   <div id="div-header" class="w-full p-4
                              border border-accent 
                              rounded-b-md
@@ -32,10 +32,10 @@
       <a href="/#About" class="headerlink">About</a>
     </div>
   </div>
-  <div id="div-calendar" class="max-w-4xl p-4 bg-middle rounded-md flex flex-col gap-4 items-center">
+  <div id="div-calendar" class="w-full max-w-4xl p-4 bg-middle rounded-md flex flex-col gap-4 items-center">
     {% block calendar %}{% endblock %}
   </div>
-  <div id="div-content" class="max-w-4xl p-4 bg-middle rounded-md flex flex-col gap-4 items-center">
+  <div id="div-content" class="w-full max-w-4xl p-4 bg-middle rounded-md flex flex-col gap-4 items-center">
     {% block info %}{% endblock %}
   </div>
   <div id="About" class="max-w-4xl p-4 bg-middle rounded-md flex flex-col items-center gap-1">
