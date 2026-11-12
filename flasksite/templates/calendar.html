@@ -8,7 +8,7 @@
 <script>
   var calendar;
 
-  function load_calendar() {
+  function loadCalendar() {
     const calendarEl = document.getElementById("calendar_week");
     calendar = EventCalendar.create(calendarEl, {
       view: "dayGridWeek",
@@ -21,10 +21,10 @@
         end: "{{max_date.isoformat()}}"
       },
       editable: false,
-      datesSet: function (info) {update_event_data(info)},
+      datesSet: function (info) {updateEventData(info)},
       eventStartEditable: false,
       eventDurationEditable: false,
-      eventClick: function (info) {event_click_event(info)},
+      eventClick: function (info) {eventClickEvent(info)},
       events: [
       {% for calendar,list in events.items() %}
         {% for event in list %}
@@ -42,24 +42,30 @@
       ]
     });
 
-    const prev_button = document.querySelector("button.ec-prev");
-    const next_button = document.querySelector("button.ec-next");
-    const calendar_div = document.querySelector("#calendar_week");
+    // force the buttons to the left/right of the calendar
+    // purely for aesthetic reasons
+    const prevButton = document.querySelector("button.ec-prev");
+    const nextButton = document.querySelector("button.ec-next");
+    const calendarDiv = document.querySelector("#calendar_week");
 
-    calendar_div.before(prev_button)
-    calendar_div.after(next_button)
+    calendarDiv.before(prevButton)
+    calendarDiv.after(nextButton)
   };
 
   document.addEventListener("DOMContentLoaded", function () {
-    upcoming_div = document.getElementById("upcomingevents")
-    past_div = document.getElementById("pastevents")
-    hidden_div = document.getElementById("allevents")
-    events_title_date = document.getElementById("eventstitledate")
+    // find the divs we need to move event cards around
+    upcomingDiv = document.getElementById("upcomingevents")
+    pastDiv = document.getElementById("pastevents")
+    hiddenDiv = document.getElementById("allevents")
+    eventsTitleDate = document.getElementById("eventstitledate")
 
-    load_calendar();
-    update_event_data();
+    // create the calendar obj
+    loadCalendar();
+    // set up event visiblity for this week
+    updateEventData();
   });
 </script>
+<!-- brute force some style stuff for the calendar widget-->
 <style>
   .ec-event-body {
     flex-direction: column !important;
@@ -109,16 +115,15 @@
 {%endblock%}
 
 {%block info %}
-<!-- TODO: will definitely look really strange with no events in either
- section. Need to make it much prettier. 
- Frankly, that'll probably involve using javascript, and I *REALLY*
- don't want to, so I will continue to procrastinate for a bit.-->
 <div id="EventsSection" class="headerdiv text-center">
 Events - <span id="eventstitledate"></span>
 </div>
 <div class="subheaderdiv">
 Upcoming
 </div>
+<!-- hidden div to store divs for ever card;
+ these get moved to either the upcoming events div or the past events div
+ if they're in the week that's currently being viewed on the calendar. -->
 <div id="allevents" class="hidden">
     {% for event in thisweek_events %}
       <div class="w-sm bg-middle p-2 rounded-md

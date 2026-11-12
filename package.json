@@ -2,5 +2,9 @@
   "dependencies": {
     "@tailwindcss/cli": "^4.3.5",
     "tailwindcss": "^4.3.5"
+  },  
+  "scripts": {
+    "flask": "cd flasksite && uv run flask run --debug --host 0.0.0.0",
+    "tailwind": "npx @tailwindcss/cli -i ./flasksite/static/styles/input.css -o ./flasksite/static/styles/output.css --watch"
   }
 }
