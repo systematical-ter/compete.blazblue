@@ -83,11 +83,13 @@ def strip_info_from_description(event_desc):
     #       as a bulleted list.
     #   Is what it is; this is fine for a first solution.
 
+    if "thun" in event_desc:
+        print(event_desc)
     twitch_link = r"(?P<url>twitch\.tv\/[a-zA-Z_0-9]+)($|&amp;sa=.+|\")"
     discord_link = r"(?P<url>discord\.gg\/[a-zA-Z_0-9]+)($|&amp;sa=.+|\")"
-    twitter_link = r"(?P<url>x\.com\/[a-zA-Z_0-9]+)($|&amp;sa=.+|\")"
+    twitter_link = r"(?P<url>x\.com\/[a-zA-Z_0-9]+)($|&amp;sa=.+|\"|\?s=20)"
     matcherino_link = r"(?P<url>matcherino\.com\/t\/[a-zA-Z_0-9]+)($|&amp;sa=.+|\")"
-    bracket_link = r"(?P<url>start\.gg\/[a-zA-Z0-9_]+)($|&amp;sa=.+|\")"
+    bracket_link = r"(?P<url>start\.gg\/(tournament\/)?[a-zA-Z0-9_\-]+)(\/details|$|&amp;sa=.+|\")"
     challonge_link = r"(?P<url>challonge\.com\/(communities\/)?[a-zA-Z0-9]+)($|&amp;sa=.+|\")"
 
     # google LOVES putting their own bullshit in front of some links!!!
