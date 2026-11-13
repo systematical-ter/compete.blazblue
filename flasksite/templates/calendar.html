@@ -136,7 +136,8 @@ Upcoming
             <img src="{{ event.image }}" referrerpolicy="no-referrer"  >
           </div>
           <div class="flex-1">
-          <b>{{ event.summary }}</b>
+          <b>{{ event.summary }}</b><br>
+          <span style="color: {{colors[event.calendar]}}">{{event.calendar}}</span><br>
           {% if event.details|length > 0 %}
             <ul class="list-disc list-inside">
             {% for item in event.details %}

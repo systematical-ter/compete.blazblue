@@ -166,6 +166,7 @@ def home():
 
             # nuke all HTML symbols in the event name so if someone tries to do injection stuff it just word vomits
             event['summary'] = html.escape(event['summary'], quote=False)
+            event['calendar'] = key
             thisweek_events.append(event)
 
     thisweek_events.sort(key=lambda event: event['start']['dateTime'])
