@@ -87,7 +87,7 @@ def strip_info_from_description(event_desc):
     discord_link = r"(?P<url>discord\.gg\/[a-zA-Z_0-9]+)($|&amp;sa=.+|\")"
     twitter_link = r"(?P<url>x\.com\/[a-zA-Z_0-9]+)($|&amp;sa=.+|\")"
     matcherino_link = r"(?P<url>matcherino\.com\/t\/[a-zA-Z_0-9]+)($|&amp;sa=.+|\")"
-    bracket_link = r"(?P<url>start\.gg\/[a-zA-Z0-9]+)($|&amp;sa=.+|\")"
+    bracket_link = r"(?P<url>start\.gg\/[a-zA-Z0-9_]+)($|&amp;sa=.+|\")"
     challonge_link = r"(?P<url>challonge\.com\/(communities\/)?[a-zA-Z0-9]+)($|&amp;sa=.+|\")"
 
     # google LOVES putting their own bullshit in front of some links!!!
