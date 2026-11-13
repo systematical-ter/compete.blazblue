@@ -114,6 +114,8 @@ def strip_info_from_description(event_desc):
 
     if twch is not None:
         res['links']['twitch'] = twch.groupdict()['url']
+    if yt is not None:
+        res['links']['youtube'] = yt.groupdict()['url']
     if di is not None:
         res['links']['discord'] = di.groupdict()['url']
     if twit is not None:
@@ -124,8 +126,6 @@ def strip_info_from_description(event_desc):
         res['links']['start'] = br.groupdict()['url']
     if ch is not None:
         res['links']['challonge'] = ch.groupdict()['url']
-    if yt is not None:
-        res['links']['youtube'] = yt.groupdict()['url']
     if details is not None:
         res['details'] = details['items']
     if image is not None:
