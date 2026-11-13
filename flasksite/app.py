@@ -91,6 +91,7 @@ def strip_info_from_description(event_desc):
     matcherino_link = r"(?P<url>matcherino\.com\/t\/[a-zA-Z_0-9]+)($|&amp;sa=.+|\")"
     bracket_link = r"(?P<url>start\.gg\/(tournament\/)?[a-zA-Z0-9_\-]+)(\/details|$|&amp;sa=.+|\")"
     challonge_link = r"(?P<url>challonge\.com\/(communities\/)?[a-zA-Z0-9]+)($|&amp;sa=.+|\")"
+    youtube_link = r"(?P<url>youtube\.com\/@[a-zA-Z]+)(\/featured|$|&amp;sa=.+|\")"
 
     # google LOVES putting their own bullshit in front of some links!!!
     image_link = r"(&quot;|\")<a href=\"(https://www.google.com/url\?q=)*(?P<url>.+?)(\"|&amp;)"
@@ -101,6 +102,7 @@ def strip_info_from_description(event_desc):
     ma = re.search(matcherino_link, event_desc)
     br = re.search(bracket_link, event_desc)
     ch = re.search(challonge_link, event_desc)
+    yt = re.search(youtube_link, event_desc)
 
     details = strip_list_items(event_desc)
 
@@ -122,6 +124,8 @@ def strip_info_from_description(event_desc):
         res['links']['start'] = br.groupdict()['url']
     if ch is not None:
         res['links']['challonge'] = ch.groupdict()['url']
+    if yt is not None:
+        res['links']['youtube'] = yt.groupdict()['url']
     if details is not None:
         res['details'] = details['items']
     if image is not None:
